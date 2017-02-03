@@ -59,10 +59,33 @@ var ViewModel = function() {
 		mapService.hideMarkers(metroStationMarkers);
 		mapService.textSearchPlaces(place);
 	};
+	self.hideMetroStations = function() {
+		mapService.hideMarkers(metroStationMarkers);
+	};
+	self.showMetroStations = function() {
+		mapService.showMarkers(metroStationMarkers);
+	};
 };
 
 
 ko.applyBindings(new ViewModel());
 
 mapService = new MapService();
+
+// Inistialize the map
+function initMap() {
+	map = new google.maps.Map(document.getElementById('map'), {
+		center: {lat: 31.230437, lng: 121.473719},
+		zoom: 13
+	});
+
+	// Create the autocomplete object and associate it with the UI input control.
+	var input = document.getElementById('place-search-text');
+	var autocomplete = new google.maps.places.Autocomplete(input);
+
+	mapService.textSearchPlaces(initialRecommendedPlaces[0].name);
+};
+
+// Show default place
+
 

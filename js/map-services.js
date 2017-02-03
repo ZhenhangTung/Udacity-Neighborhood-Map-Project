@@ -5,19 +5,6 @@ var metroStationMarkers = [];
 var placeMarkers = [];
 
 
-// Inistialize the map
-function initMap() {
-	map = new google.maps.Map(document.getElementById('map'), {
-		center: {lat: 31.230437, lng: 121.473719},
-		zoom: 13
-	});
-
-	// Create the autocomplete object and associate it with the UI input control.
-	var input = document.getElementById('place-search-text');
-	var autocomplete = new google.maps.places.Autocomplete(input);
-};
-
-
 
 var MapService = function () {
 
@@ -105,8 +92,18 @@ MapService.prototype.searchMetroStationInRadius = function(latlng, radius = 1000
 // Hide markers from map
 MapService.prototype.hideMarkers = function(markers) {
 	for (var i = 0; i < markers.length; i++) {
-			markers[i].setMap(null);
+		markers[i].setMap(null);
 	}
+};
+
+MapService.prototype.showMarkers = function(markers) {
+	var bounds = new google.maps.LatLngBounds();
+	// Extend the boundaries of the map for each marker and display the marker
+	for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(map);
+		bounds.extend(markers[i].position);
+	}
+	map.fitBounds(bounds);
 };
 
 // Create marker
