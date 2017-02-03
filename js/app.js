@@ -36,6 +36,9 @@ var initialRecommendedPlaces = [
 	},
 ];
 
+var radius = ko.observableArray([
+
+]);
 
 var ViewModel = function() {
 	var self = this;
@@ -44,14 +47,12 @@ var ViewModel = function() {
 	self.searchRecommendedPlacesAndNearbyMetroStations = function(place) {
 		mapService.hideMarkers(placeMarkers);
 		mapService.hideMarkers(metroStationMarkers);
-		// searchPlacesByGeocoding(place.latlng);
 		mapService.textSearchPlaces(place.name);
-		// mapService.searchMetroStationInRadius(place.latlng, 3000);
 	};
 	self.searchPlacesAndNearbyMetroStations = function() {
 		place = $('#place-search-text').val();
 		if (! place) {
-			alert('Please input the place you want to go.')
+			window.alert('Please input the place you want to go.')
 		}
 		
 		mapService.hideMarkers(placeMarkers);
@@ -63,5 +64,5 @@ var ViewModel = function() {
 
 ko.applyBindings(new ViewModel());
 
-var mapService = new MapService();
+mapService = new MapService();
 

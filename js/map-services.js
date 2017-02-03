@@ -19,7 +19,7 @@ function initMap() {
 
 
 
-function MapService() {
+var MapService = function () {
 
 };
 
@@ -161,7 +161,6 @@ MapService.prototype.createMarkersForSearchResults = function(places) {
 			if (placeInfoWindow.marker == this) {
 				console.log("This infowindow already is on this marker!");
 			} else {
-				console.log(placeInfoWindow.getContent());
 				mapService.getPlacesDetailsFromWiki(place.name, this, placeInfoWindow);
 			}
 		});
@@ -195,10 +194,9 @@ MapService.prototype.getPlacesDetailsFromWiki = function(place, marker, infowind
             infowindow.setContent(wikiHtml);
 			infowindow.open(map, marker);
         },
-        error: function(){
-        	// will fire when timeout is reached
-    	},
         'timeout': 5000
+    }).fail(function() {
+    	window.alert('Failed to get info from wiki. Connection timeout.');
     });
     
 };
