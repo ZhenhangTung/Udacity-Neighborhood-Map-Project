@@ -7,7 +7,11 @@ var placeMarkers = [];
 
 
 var MapService = function () {
+	
+};
 
+MapService.prototype.setUpIcon = function() {
+	this.highlightedIcon = this.makeMarkerIcon('0091ff');
 };
 
 // Searching places with input text using Google's PlacesService
@@ -120,6 +124,12 @@ MapService.prototype.createMarker = function(place, markerIconColor = 'f7584c') 
 		infowindow.setContent(place.name);
 		infowindow.open(map, this);
 	});
+	marker.addListener('mouseover', function() {
+		this.setIcon(this.highlightedIcon);
+	});
+	marker.addListener('mouseout', function() {
+		this.setIcon(metroStationIcon);
+	});
 	return marker;
 };
 
@@ -160,6 +170,12 @@ MapService.prototype.createMarkersForSearchResults = function(places) {
 			} else {
 				mapService.getPlacesDetailsFromWiki(place.name, this, placeInfoWindow);
 			}
+		});
+		marker.addListener('mouseover', function() {
+			this.setIcon(this.highlightedIcon);
+		});
+		marker.addListener('mouseout', function() {
+			this.setIcon(icon);
 		});
 		placeMarkers.push(marker);
 	}

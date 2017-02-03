@@ -11,6 +11,7 @@ It searches every scenery spot's nearby metro stations in Shanghai, for now, the
 4. If you click on 'Recommended Scenery Spot', there is some famous scenery spots in Shanghai you could may have interest.
 
 # Todo list
+* Move global variable into MapService.
 * User could choose the searching radius.
 * Map could save recent 10 searching histories.
 * Add images to search results.

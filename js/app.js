@@ -84,8 +84,7 @@ function initMap() {
 	var autocomplete = new google.maps.places.Autocomplete(input);
 
 	mapService.textSearchPlaces(initialRecommendedPlaces[0].name);
+	mapService.setUpIcon();
 };
-
-// Show default place
 
 
