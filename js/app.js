@@ -42,10 +42,11 @@ var ViewModel = function() {
 	self.recommendedPlaces = ko.observableArray(initialRecommendedPlaces);
 	self.searchHistroies = ko.observableArray([]);
 	self.searchRecommendedPlacesAndNearbyMetroStations = function(place) {
-		hideMarkers(placeMarkers);
-		hideMarkers(metroStationMarkers);
-		searchPlacesByGeocoding(place.latlng);
-		searchMetroStationInRadius(place.latlng, 3000);
+		mapService.hideMarkers(placeMarkers);
+		mapService.hideMarkers(metroStationMarkers);
+		// searchPlacesByGeocoding(place.latlng);
+		mapService.textSearchPlaces(place.name);
+		// mapService.searchMetroStationInRadius(place.latlng, 3000);
 	};
 	self.searchPlacesAndNearbyMetroStations = function() {
 		place = $('#place-search-text').val();
@@ -53,12 +54,14 @@ var ViewModel = function() {
 			alert('Please input the place you want to go.')
 		}
 		
-		hideMarkers(placeMarkers);
-		hideMarkers(metroStationMarkers);
-		textSearchPlaces(place);
+		mapService.hideMarkers(placeMarkers);
+		mapService.hideMarkers(metroStationMarkers);
+		mapService.textSearchPlaces(place);
 	};
 };
 
 
 ko.applyBindings(new ViewModel());
+
+var mapService = new MapService();
 
