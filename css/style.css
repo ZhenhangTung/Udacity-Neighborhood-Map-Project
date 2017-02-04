@@ -12,3 +12,21 @@ html, body {
 .map-navbar {
 	margin-bottom: 0px;
 }
+
+.side-bar {
+	float: left;
+	width: 15%;
+	overflow-y: scroll;
+	resize: none;
+	height: 90%;
+}
+
+/*.metro-station-filter {
+	float: letf;
+}*/
+
+.metro-station-title {
+	text-align: center;
+}
+
+/*.metro-stations {}*/

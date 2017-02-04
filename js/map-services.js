@@ -26,11 +26,9 @@ MapService.prototype.textSearchPlaces = function (place) {
 		if (status === google.maps.places.PlacesServiceStatus.OK) {
 			map.setCenter(results[0].geometry.location);
 			map.setZoom(15);
-			// console.log(results);
 			mapService.createMarkersForSearchResults(results);
 			results.forEach(function(result) {
 				var latlng = result.geometry.location.lat() + "," + result.geometry.location.lng();
-				// console.log(this);
 				mapService.searchMetroStationInRadius(latlng, 3000);
 			});
 		}
@@ -43,7 +41,6 @@ MapService.prototype.searchPlacesByGeocoding = function(latlng) {
 	var infowindow = new google.maps.InfoWindow;
 	var latlngStr = latlng.split(',', 2);
 	latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
-	// console.log(latlng);
 	geocoder.geocode(
 	{
 		'location': latlng
@@ -85,8 +82,10 @@ MapService.prototype.searchMetroStationInRadius = function(latlng, radius = 1000
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 			for (var i = 0; i < results.length; i++) {
 				var metroStationMarker = mapService.createMarker(results[i], 'FFFF24');
-				if ($.inArray(metroStationMarker, metroStationMarkers)) {
+				if (! ($.inArray(metroStationMarker, metroStationMarkers)>-1)) {
+					metroStationMarker.stationName = results[i].name;
 					metroStationMarkers.push(metroStationMarker);
+					metroStations.push({'name': results[i].name});
 				}
 			}
 		}
@@ -212,4 +211,13 @@ MapService.prototype.getPlacesDetailsFromWiki = function(place, marker, infowind
     	window.alert('Failed to get info from wiki. Connection timeout.');
     });
     
+};
+
+MapService.prototype.filterStationMarker = function(stationName) {
+	this.showMarkers(metroStationMarkers);
+	metroStationMarkers.forEach(function(marker) {
+		if (stationName !== marker.stationName) {
+			marker.setMap(null);
+		};
+	});
 };
