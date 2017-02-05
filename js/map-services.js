@@ -120,14 +120,15 @@ MapService.prototype.createMarker = function(place, markerIconColor = 'f7584c') 
 	var metroStationIcon = this.makeMarkerIcon(markerIconColor);
 	marker.setIcon(metroStationIcon);
 	google.maps.event.addListener(marker, 'click', function() {
-		infowindow.setContent(place.name);
-		infowindow.open(map, this);
-	});
-	marker.addListener('mouseover', function() {
-		this.setIcon(this.highlightedIcon);
+		// infowindow.setContent(place.name);
+		// infowindow.open(map, this);
+		mapService.getPlacesDetailsFromWiki(place.name, marker, infowindow);
 	});
 	marker.addListener('mouseout', function() {
 		this.setIcon(metroStationIcon);
+	});
+	marker.addListener('click', function() {
+		this.setIcon(this.highlightedIcon);
 	});
 	return marker;
 };
@@ -201,6 +202,9 @@ MapService.prototype.getPlacesDetailsFromWiki = function(place, marker, infowind
                 var url = "https://en.wikipedia.org/wiki/"+ articleStr;
                 wikiHtml += '<li><a href="' + url +'">' + articleStr + '</a></li>';
             }
+            if (! wikiHtml) {
+            	wikiHtml = 'Sorry! No related info in wiki';
+            }
             wikiHtml = '<ul>' + wikiHtml + '</ul>';
             wikiHtml = '<h4>Wiki Info</h4><hr/>' + wikiHtml;
             infowindow.setContent(wikiHtml);
@@ -215,9 +219,15 @@ MapService.prototype.getPlacesDetailsFromWiki = function(place, marker, infowind
 
 MapService.prototype.filterStationMarker = function(stationName) {
 	this.showMarkers(metroStationMarkers);
+	var matchedNumber = 0;
 	metroStationMarkers.forEach(function(marker) {
-		if (stationName !== marker.stationName) {
+		if (! marker.stationName.match(stationName)) {
 			marker.setMap(null);
+		} else {
+			matchedNumber++;
 		};
 	});
+	if (! matchedNumber) {
+		window.alert('No matched metro stations');
+	};
 };
