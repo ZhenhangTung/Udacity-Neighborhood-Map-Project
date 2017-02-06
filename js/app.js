@@ -46,9 +46,17 @@ var ViewModel = function() {
 	var self = this;
 	self.recommendedPlaces = ko.observableArray(initialRecommendedPlaces);
 	self.searchHistroies = ko.observableArray([]);
-	self.metroStations = metroStations;
 	self.place = ko.observable("");
 	self.stationName = ko.observable("");
+	self.metroStations = ko.computed(function() {
+		if (! self.stationName()) {
+			return metroStations();
+		} else {
+			return ko.utils.arrayFilter(metroStations(), function(station){
+				return station.name.toLowerCase().indexOf(self.stationName().toLowerCase()) !== -1;
+			});
+		}
+	});
 	self.searchRecommendedPlacesAndNearbyMetroStations = function(place) {
 		mapService.hideMarkers(placeMarkers);
 		mapService.hideMarkers(metroStationMarkers);

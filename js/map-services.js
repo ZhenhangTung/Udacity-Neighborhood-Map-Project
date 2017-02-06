@@ -8,6 +8,7 @@ var placeMarkers = [];
 
 var MapService = function () {
 	this.activedWindow = null;
+	this.toggledMarker = null;
 };
 
 MapService.prototype.setUpIcon = function() {
@@ -31,6 +32,8 @@ MapService.prototype.textSearchPlaces = function (place) {
 				var latlng = result.geometry.location.lat() + "," + result.geometry.location.lng();
 				mapService.searchMetroStationInRadius(latlng, 3000);
 			});
+		} else {
+			window.alert('There was something error when searching places');
 		}
 	});
 };
@@ -130,6 +133,7 @@ MapService.prototype.createMarker = function(place, markerIconColor = 'f7584c') 
 		}
 		mapService.getPlacesDetailsFromWiki(place.name, marker, infowindow);
 		this.setIcon(this.highlightedIcon);
+		mapService.toggleBounce(marker);
 	});
 	marker.addListener('mouseout', function() {
 		this.setIcon(metroStationIcon);
@@ -243,4 +247,16 @@ MapService.prototype.highlightMarker = function(stationName) {
 			google.maps.event.trigger(marker, 'click');
 		}
 	});
+};
+
+MapService.prototype.toggleBounce = function(marker) {
+	if (mapService.toggledMarker) {
+		mapService.toggledMarker.setAnimation(null);
+	}
+	if (marker.getAnimation() !== null) {
+		marker.setAnimation(null);
+	} else {
+		marker.setAnimation(google.maps.Animation.BOUNCE);
+	}
+	mapService.toggledMarker = marker;
 };
