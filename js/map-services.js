@@ -231,3 +231,9 @@ MapService.prototype.filterStationMarker = function(stationName) {
 		window.alert('No matched metro stations');
 	};
 };
+
+MapService.prototype.highlightMarker = function(stationName) {
+	// metroStationMarkers.forEach(function(marker) {
+		
+	// };
+};

@@ -47,20 +47,25 @@ var ViewModel = function() {
 	self.recommendedPlaces = ko.observableArray(initialRecommendedPlaces);
 	self.searchHistroies = ko.observableArray([]);
 	self.metroStations = metroStations;
+	self.place = ko.observable("");
+	self.stationName = ko.observable("");
 	self.searchRecommendedPlacesAndNearbyMetroStations = function(place) {
 		mapService.hideMarkers(placeMarkers);
 		mapService.hideMarkers(metroStationMarkers);
 		mapService.textSearchPlaces(place.name);
 	};
 	self.searchPlacesAndNearbyMetroStations = function() {
-		var place = $('#place-search-text').val();
-		if (! place) {
-			window.alert('Please input the place you want to go.')
-		}
+		// var place = this.place();
+		// this.place;
+		console.log('jquery:' + $('#place-search-text').val());
+		console.log('value binding:' + this.place());
+		// if (! this.place) {
+		// 	window.alert('Please input the place you want to go.')
+		// }
 		
-		mapService.hideMarkers(placeMarkers);
-		mapService.hideMarkers(metroStationMarkers);
-		mapService.textSearchPlaces(place);
+		// mapService.hideMarkers(placeMarkers);
+		// mapService.hideMarkers(metroStationMarkers);
+		// mapService.textSearchPlaces(place);
 	};
 	self.hideMetroStations = function() {
 		mapService.hideMarkers(metroStationMarkers);
@@ -71,6 +76,9 @@ var ViewModel = function() {
 	self.filterStationMarker = function() {
 		var stationName = $('#station-filter-box').val();
 		mapService.filterStationMarker(stationName);
+	};
+	self.showRelatedMarkerInfo = function(data) {
+		mapService.highlightMarker(data.name);
 	};
 };
 
