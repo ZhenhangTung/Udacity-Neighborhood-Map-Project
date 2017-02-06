@@ -7,7 +7,7 @@ var placeMarkers = [];
 
 
 var MapService = function () {
-	
+	this.activedWindow = null;
 };
 
 MapService.prototype.setUpIcon = function() {
@@ -122,6 +122,12 @@ MapService.prototype.createMarker = function(place, markerIconColor = 'f7584c') 
 	google.maps.event.addListener(marker, 'click', function() {
 		// infowindow.setContent(place.name);
 		// infowindow.open(map, this);
+		/*
+		 * If there is an actived info window, it should be closed
+		 */
+		if (mapService.activedWindow) {
+			mapService.activedWindow.close();
+		}
 		mapService.getPlacesDetailsFromWiki(place.name, marker, infowindow);
 	});
 	marker.addListener('mouseout', function() {
@@ -209,6 +215,7 @@ MapService.prototype.getPlacesDetailsFromWiki = function(place, marker, infowind
             wikiHtml = '<h4>Wiki Info</h4><hr/>' + wikiHtml;
             infowindow.setContent(wikiHtml);
 			infowindow.open(map, marker);
+			mapService.activedWindow = infowindow;
         },
         'timeout': 5000
     }).fail(function() {
@@ -233,7 +240,9 @@ MapService.prototype.filterStationMarker = function(stationName) {
 };
 
 MapService.prototype.highlightMarker = function(stationName) {
-	// metroStationMarkers.forEach(function(marker) {
-		
-	// };
+	metroStationMarkers.forEach(function(marker) {
+		if (marker.stationName.match(stationName)) {
+			google.maps.event.trigger(marker, 'click');
+		}
+	});
 };

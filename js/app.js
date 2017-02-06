@@ -55,17 +55,14 @@ var ViewModel = function() {
 		mapService.textSearchPlaces(place.name);
 	};
 	self.searchPlacesAndNearbyMetroStations = function() {
-		// var place = this.place();
-		// this.place;
-		console.log('jquery:' + $('#place-search-text').val());
-		console.log('value binding:' + this.place());
-		// if (! this.place) {
-		// 	window.alert('Please input the place you want to go.')
-		// }
+		var place = $('#place-search-text').val();
+		if (! this.place) {
+			window.alert('Please input the place you want to go.')
+		}
 		
-		// mapService.hideMarkers(placeMarkers);
-		// mapService.hideMarkers(metroStationMarkers);
-		// mapService.textSearchPlaces(place);
+		mapService.hideMarkers(placeMarkers);
+		mapService.hideMarkers(metroStationMarkers);
+		mapService.textSearchPlaces(place);
 	};
 	self.hideMetroStations = function() {
 		mapService.hideMarkers(metroStationMarkers);
@@ -102,4 +99,10 @@ function initMap() {
 	mapService.setUpIcon();
 };
 
+/**
+ * Error callback for Google Map API request
+ */
+function mapError() {
+	window.alert('There is something wrong when loading Google Map Service');
+};
 
