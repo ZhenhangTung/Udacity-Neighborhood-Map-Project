@@ -39,7 +39,7 @@
 	      </ul>
 	      <div class="navbar-form navbar-left">
 	        <div class="form-group ">
-	          <input type="text" class="form-control" placeholder="Any places interested?" id="place-search-text" data-bind="value: place">
+	          <input type="text" class="form-control" placeholder="Any places interested?" id="place-search-text" data-bind="value: place, addressAutocomplete: FullAddress, route: Street, locality: Suburb, administrative_area_level_1: State">
 	        </div>
 	        <button type="submit" class="btn btn-default" data-bind="click: searchPlacesAndNearbyMetroStations">Go</button>
 	      </div>

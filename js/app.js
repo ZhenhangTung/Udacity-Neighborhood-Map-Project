@@ -57,14 +57,20 @@ var ViewModel = function() {
 			});
 		}
 	});
+	self.FullAddress = ko.observable('');
+    self.Street = ko.observable('s');
+    self.Suburb = ko.observable('c');
+    self.State = ko.observable('r');
+    self.Lat = ko.observable('lat');
+    self.Lon = ko.observable('lon');
 	self.searchRecommendedPlacesAndNearbyMetroStations = function(place) {
 		mapService.hideMarkers(placeMarkers);
 		mapService.hideMarkers(metroStationMarkers);
 		mapService.textSearchPlaces(place.name);
 	};
 	self.searchPlacesAndNearbyMetroStations = function() {
-		var place = $('#place-search-text').val();
-		if (! this.place) {
+		var place = self.FullAddress();
+		if (! place) {
 			window.alert('Please input the place you want to go.')
 		}
 		
@@ -79,18 +85,16 @@ var ViewModel = function() {
 		mapService.showMarkers(metroStationMarkers);
 	};
 	self.filterStationMarker = function() {
-		var stationName = $('#station-filter-box').val();
-		mapService.filterStationMarker(stationName);
+		mapService.filterStationMarker(self.stationName());
 	};
 	self.showRelatedMarkerInfo = function(data) {
 		mapService.highlightMarker(data.name);
 	};
 };
 
-
-ko.applyBindings(new ViewModel());
-
 mapService = new MapService();
+
+
 
 // Inistialize the map
 function initMap() {
@@ -99,12 +103,30 @@ function initMap() {
 		zoom: 13
 	});
 
-	// Create the autocomplete object and associate it with the UI input control.
-	var input = document.getElementById('place-search-text');
-	var autocomplete = new google.maps.places.Autocomplete(input);
-
 	mapService.textSearchPlaces(initialRecommendedPlaces[0].name);
 	mapService.setUpIcon();
+
+	// Add custom binding handler
+	ko.bindingHandlers.addressAutocomplete = {
+	    init: function (element, valueAccessor, allBindingsAccessor) {
+	        var value = valueAccessor(), allBindings = allBindingsAccessor();
+
+	        var options = { types: ['geocode'] };
+	        ko.utils.extend(options, allBindings.autocompleteOptions)
+
+	        var autocomplete = new google.maps.places.Autocomplete(element, options);
+
+	        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+	            result = autocomplete.getPlace();
+
+	            value(result.formatted_address);
+	        });
+	    },
+	    update: function (element, valueAccessor, allBindingsAccessor) {
+	        ko.bindingHandlers.value.update(element, valueAccessor);
+	    }
+	};
+	ko.applyBindings(new ViewModel());
 };
 
 /**
