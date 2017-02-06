@@ -129,12 +129,10 @@ MapService.prototype.createMarker = function(place, markerIconColor = 'f7584c') 
 			mapService.activedWindow.close();
 		}
 		mapService.getPlacesDetailsFromWiki(place.name, marker, infowindow);
+		this.setIcon(this.highlightedIcon);
 	});
 	marker.addListener('mouseout', function() {
 		this.setIcon(metroStationIcon);
-	});
-	marker.addListener('click', function() {
-		this.setIcon(this.highlightedIcon);
 	});
 	return marker;
 };
