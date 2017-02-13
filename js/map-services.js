@@ -61,7 +61,7 @@ MapService.prototype.searchPlacesByGeocoding = function(latlng) {
 				});
 				placeMarkers.push(placeMarker);
 				infowindow.setContent(results[0].formatted_address);
-				infowindow.open(map, placeMarker);				
+				infowindow.open(map, placeMarker);
 			} else {
 				window.alert('No results found');
 			}
@@ -83,7 +83,15 @@ MapService.prototype.searchMetroStationInRadius = function(latlng, radius = 1000
 	};
 	service.nearbySearch(request, function(results, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
+			if (metroStations()) {
+				metroStations().length = 0;
+			}
 			for (var i = 0; i < results.length; i++) {
+				// the unicode \u89C4\u5212\u4E2D stands for "规划中", which means that this metro station is still in planning
+				// the unicode \u53F7\u53E3 stands for "号口", for filtering the metro's exit
+				if (results[i].name.match('[\u89C4\u5212\u4E2D]') || results[i].name.match('[\u53F7\u53E3]')) {
+					continue;
+				}
 				var metroStationMarker = mapService.createMarker(results[i], 'FFFF24');
 				if (! ($.inArray(metroStationMarker, metroStationMarkers)>-1)) {
 					metroStationMarker.stationName = results[i].name;
@@ -223,7 +231,7 @@ MapService.prototype.getPlacesDetailsFromWiki = function(place, marker, infowind
     }).fail(function() {
     	window.alert('Failed to get info from wiki. Connection timeout.');
     });
-    
+
 };
 
 MapService.prototype.filterStationMarker = function(stationName) {
@@ -233,6 +241,8 @@ MapService.prototype.filterStationMarker = function(stationName) {
 		if (! marker.stationName.match(stationName)) {
 			marker.setMap(null);
 		} else {
+			mapService.toggleBounce(marker);
+			google.maps.event.trigger(marker, 'click');
 			matchedNumber++;
 		};
 	});
@@ -244,6 +254,7 @@ MapService.prototype.filterStationMarker = function(stationName) {
 MapService.prototype.highlightMarker = function(stationName) {
 	metroStationMarkers.forEach(function(marker) {
 		if (marker.stationName.match(stationName)) {
+			mapService.toggleBounce(marker);
 			google.maps.event.trigger(marker, 'click');
 		}
 	});
