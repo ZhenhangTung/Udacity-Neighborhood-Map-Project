@@ -131,8 +131,7 @@ MapService.prototype.createMarker = function(place, markerIconColor = 'f7584c') 
 	var metroStationIcon = this.makeMarkerIcon(markerIconColor);
 	marker.setIcon(metroStationIcon);
 	google.maps.event.addListener(marker, 'click', function() {
-		// infowindow.setContent(place.name);
-		// infowindow.open(map, this);
+		mapService.toggleBounce(marker);
 		/*
 		 * If there is an actived info window, it should be closed
 		 */
@@ -256,6 +255,7 @@ MapService.prototype.highlightMarker = function(stationName) {
 		if (marker.stationName.match(stationName)) {
 			mapService.toggleBounce(marker);
 			google.maps.event.trigger(marker, 'click');
+			return false;
 		}
 	});
 };
