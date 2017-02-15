@@ -258,12 +258,15 @@ MapService.prototype.filterStationMarker = function(stationName) {
 
 MapService.prototype.filterStationMarkerLively = function(stationName) {
 	this.showMarkers(metroStationMarkers);
-	// var matchedNumber = 0;
 	metroStationMarkers.forEach(function(marker) {
 		if (! marker.stationName.toLowerCase().match(stationName.toLowerCase())) {
 			marker.setMap(null);
 		}
 	});
+};
+
+MapService.prototype.showAllMarkers = function(stationName) {
+	this.showMarkers(metroStationMarkers);
 };
 
 MapService.prototype.highlightMarker = function(stationName) {

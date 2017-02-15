@@ -50,6 +50,7 @@ var ViewModel = function() {
 	self.stationName = ko.observable("");
 	self.metroStations = ko.computed(function() {
 		if (! self.stationName()) {
+			mapService.showAllMarkers();
 			return metroStations();
 		} else {
 			mapService.filterStationMarkerLively(self.stationName());
