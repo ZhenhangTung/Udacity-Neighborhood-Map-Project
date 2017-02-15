@@ -52,6 +52,7 @@ var ViewModel = function() {
 		if (! self.stationName()) {
 			return metroStations();
 		} else {
+			mapService.filterStationMarkerLively(self.stationName());
 			return ko.utils.arrayFilter(metroStations(), function(station){
 				return station.name.toLowerCase().indexOf(self.stationName().toLowerCase()) !== -1;
 			});
@@ -73,7 +74,7 @@ var ViewModel = function() {
 		if (! place) {
 			window.alert('Please input the place you want to go.')
 		}
-		
+
 		mapService.hideMarkers(placeMarkers);
 		mapService.hideMarkers(metroStationMarkers);
 		mapService.textSearchPlaces(place);

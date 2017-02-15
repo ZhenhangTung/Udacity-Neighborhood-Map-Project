@@ -4,6 +4,8 @@ var metroStationMarkers = [];
 
 var placeMarkers = [];
 
+var previousClickedMarker;
+
 
 
 var MapService = function () {
@@ -131,6 +133,9 @@ MapService.prototype.createMarker = function(place, markerIconColor = 'f7584c') 
 	var metroStationIcon = this.makeMarkerIcon(markerIconColor);
 	marker.setIcon(metroStationIcon);
 	google.maps.event.addListener(marker, 'click', function() {
+		if (previousClickedMarker) {
+			previousClickedMarker.setIcon(metroStationIcon);
+		}
 		mapService.toggleBounce(marker);
 		/*
 		 * If there is an actived info window, it should be closed
@@ -141,10 +146,11 @@ MapService.prototype.createMarker = function(place, markerIconColor = 'f7584c') 
 		mapService.getPlacesDetailsFromWiki(place.name, marker, infowindow);
 		this.setIcon(this.highlightedIcon);
 		mapService.toggleBounce(marker);
+		previousClickedMarker = marker;
 	});
-	marker.addListener('mouseout', function() {
-		this.setIcon(metroStationIcon);
-	});
+	// marker.addListener('mouseout', function() {
+	// 	this.setIcon(metroStationIcon);
+	// });
 	return marker;
 };
 
@@ -237,17 +243,27 @@ MapService.prototype.filterStationMarker = function(stationName) {
 	this.showMarkers(metroStationMarkers);
 	var matchedNumber = 0;
 	metroStationMarkers.forEach(function(marker) {
-		if (! marker.stationName.match(stationName)) {
+		if (! marker.stationName.toLowerCase().match(stationName.toLowerCase())) {
 			marker.setMap(null);
 		} else {
 			mapService.toggleBounce(marker);
 			google.maps.event.trigger(marker, 'click');
 			matchedNumber++;
-		};
+		}
 	});
 	if (! matchedNumber) {
 		window.alert('No matched metro stations');
-	};
+	}
+};
+
+MapService.prototype.filterStationMarkerLively = function(stationName) {
+	this.showMarkers(metroStationMarkers);
+	// var matchedNumber = 0;
+	metroStationMarkers.forEach(function(marker) {
+		if (! marker.stationName.toLowerCase().match(stationName.toLowerCase())) {
+			marker.setMap(null);
+		}
+	});
 };
 
 MapService.prototype.highlightMarker = function(stationName) {
